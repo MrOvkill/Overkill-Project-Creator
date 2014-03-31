@@ -3,7 +3,7 @@
 import os, sys, time
 
 """
-Overkill Project Creator 0.0.2
+Overkill Project Creator 0.0.3
 Copyright (c) 2014 Samuel "MrOverkill" Meyers
 """
 
@@ -14,15 +14,34 @@ def fmt(string, name, cls):
 	d = c.replace("{CLASSLOWER}", cls.lower())
 	return d
 
+def projfmt(string, name, ptype, targets):
+	string = string.replace("{NAME}", name)
+	a = string.replace("{TYPE}", ptype)
+	b = a.replace("{OPCVERSION}", "0.0.3")
+	c = b.replace("{VERSION}", "0.0.1")
+	d = c.replace("{SOURCES}", "src")
+	e = d.replace("{TARGETS}", targets)
+	return e
+
 def makecpp(name):
 	os.makedirs(name)
 	os.chdir(name)
 	os.makedirs("src")
 	os.makedirs("out")
 	os.makedirs("bin")
+	os.makedirs("targets")
+	os.chdir("targets")
+	f = open("default.target", "w")
+	f.write("""Name###Default
+Sources###main.cxx
+Complier Flags###none
+Linker Flags###none
+Target Binary###main.out""")
+	f.close()
+	os.chdir("..")
 	os.chdir("src")
 	f = open("main.cxx", "w")
-	e = open("/usr/local/opc/Main-C++.template", "r")
+	e = open("/usr/local/opc/templates/Main-C++.template", "r")
 	f.write(fmt(e.read(), name, ""))
 	f.close()
 	os.chdir("..")
@@ -30,6 +49,14 @@ def makecpp(name):
 	f.write("""default:
 	g++ -c src/main.cxx -o out/main.o
 	g++ out/main.o -o bin/main.out""")
+	f.close()
+	f = open(name + ".opf", "w")
+	f.write(projfmt("""Name###{NAME}
+Type###{TYPE}
+OPC Version###{OPCVERSION}
+Project Version###{VERSION}
+Source Directory###{SOURCES}
+Targets###{TARGETS}""", name, "CPP", "default"))
 	f.close()
 	print "Project created!"
 	print "Building..."
@@ -39,7 +66,7 @@ def makecpp(name):
 	os.system("./bin/main.out")
 	print "Done!"
 
-print "Overkill Project Creator 0.0.2"
+print "Overkill Project Creator 0.0.3"
 print "Copyright (c) 2014 Samuel \"MrOverkill\" Meyers"
 print ""
 
@@ -56,8 +83,8 @@ argc = len(sys.argv)
 
 if argc < 3:
 	print usage
-elif os.path.exists(sys.argv[2]):
-	print "Error: Folder \"" + sys.argv[2] + "\" Already exists!"
+elif os.path.exists(sys.argv[2] + "/" + sys.argv[2] + ".opf"):
+	print "Error: Project \"" + sys.argv[2] + "\" Already exists!"
 else:
 	if sys.argv[1] == "CPP":
 		makecpp(sys.argv[2])

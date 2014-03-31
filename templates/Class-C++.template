@@ -1,0 +1,14 @@
+/*
+
+Date: {DATE}
+Project: {PROJECT}
+Class: {CLASS}
+
+*/
+
+#include "{CLASS}.h"
+
+{CLASSLOWER}::{CLASSLOWER}()
+{
+  
+}

@@ -3,72 +3,21 @@
 import os, sys
 
 """
-Overkill Project Creator 0.0.2
+Overkill Project Creator 0.0.3
 Copyright (c) 2014 Samuel "MrOverkill" Meyers
 Unix setup
 """
 
-if not os.path.exists("/usr/bin/makeproject"):
-	os.system("cp makeproject /usr/bin/")
-	os.system("chmod 777 /usr/bin/makeproject")
+if not os.path.exists("/usr/local/bin/makeproject"):
+	os.system("cp src/makeproject /usr/local/bin/")
+	os.system("chmod 777 /usr/local/bin/makeproject")
 
 if not os.path.exists("/usr/local/opc"):
 	os.system("mkdir /usr/local/opc")
 	os.system("chmod -R 777 /usr/local/opc")
 
-if not os.path.exists("/usr/local/opc/Main-C++.template"):
-	f = open("/usr/local/opc/Main-C++.template", "w")
-	f.write("""/*
-
-Date: {DATE}
-Project: {PROJECT}
-
-*/
-
-#include <iostream>
-
-using namespace std;
-
-int main(int argc, char* argv[])
-{
-	cout<<"Hello, World!"<<endl;
-	return 0;
-}""")
-	f.close()
-
-if not os.path.exists("/usr/local/opc/Class-C++.template"):
-	f = open("/usr/local/opc/Class-C++.template", "w")
-	f.write("""/*
-
-Date: {DATE}
-Project: {PROJECT}
-Class: {CLASS}
-
-*/
-
-#include "{CLASS}.h"
-
-{CLASSLOWER}::{CLASSLOWER}()
-{
-	
-}""")
-	f.close()
-
-if not os.path.exists("/usr/local/opc/Class-H.template"):
-	f = open("/usr/local/opc/Class-H.template", "w")
-	f.write("""/*
-
-Date: {DATE}
-Project: {PROJECT}
-Class: {CLASS}
-
-*/
-
-class {CLASSLOWER}
-{
-	public:
-		{CLASS}();
-};""")
-	f.close()
+if not os.path.exists("/usr/local/opc/templates"):
+	os.system("cp -rf templates /usr/local/opc/")
+	os.system("chmod -R 777 /usr/local/opc/templates")
 
 print "Installed"

@@ -1,0 +1,13 @@
+/*
+
+Date: {DATE}
+Project: {PROJECT}
+Class: {CLASS}
+
+*/
+
+class {CLASSLOWER}
+{
+  public:
+    {CLASS}();
+};
