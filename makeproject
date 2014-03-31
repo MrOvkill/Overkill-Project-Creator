@@ -1,54 +1,65 @@
 #!/usr/bin/env python
 
+import os, sys, time
+
 """
-Overkill Project Creator 0.0.1
+Overkill Project Creator 0.0.2
 Copyright (c) 2014 Samuel "MrOverkill" Meyers
 """
 
-import os, sys
+def fmt(string, name, cls):
+	a = string.replace("{DATE}", time.strftime("%x"))
+	b = a.replace("{PROJECT}", name)
+	c = b.replace("{CLASS}", cls)
+	d = c.replace("{CLASSLOWER}", cls.lower())
+	return d
 
-print "Overkill Project Creator 0.0.1"
+def makecpp(name):
+	os.makedirs(name)
+	os.chdir(name)
+	os.makedirs("src")
+	os.makedirs("out")
+	os.makedirs("bin")
+	os.chdir("src")
+	f = open("main.cxx", "w")
+	e = open("/usr/local/opc/Main-C++.template", "r")
+	f.write(fmt(e.read(), name, ""))
+	f.close()
+	os.chdir("..")
+	f = open("Makefile", "w")
+	f.write("""default:
+	g++ -c src/main.cxx -o out/main.o
+	g++ out/main.o -o bin/main.out""")
+	f.close()
+	print "Project created!"
+	print "Building..."
+	os.system("make")
+	print "Succeeded!"
+	print "Running..."
+	os.system("./bin/main.out")
+	print "Done!"
+
+print "Overkill Project Creator 0.0.2"
 print "Copyright (c) 2014 Samuel \"MrOverkill\" Meyers"
 print ""
 
-usage = "Usage: " + sys.argv[0] + " <projectname>"
+usage = """Usage: {0} <language> <projectname>
+
+language may be:
+- CPP
+projectname may be:
+- Any name your filesystem deems "legal"
+
+example: {0} CPP MyAwesomeProject""".format(sys.argv[0])
 
 argc = len(sys.argv)
 
-if argc < 2:
-  print usage
+if argc < 3:
+	print usage
+elif os.path.exists(sys.argv[2]):
+	print "Error: Folder \"" + sys.argv[2] + "\" Already exists!"
 else:
-  os.makedirs(sys.argv[1])
-  os.chdir(sys.argv[1])
-  os.makedirs("src")
-  os.makedirs("out")
-  os.makedirs("bin")
-  os.chdir("src")
-  f = open("main.cxx", "w")
-  f.write("""/*
-This file was created by Overkill Project Creator 0.0.1
-Copyright (c) 2014 Samuel "MrOverkill" Meyers
-*/
-
-#include <iostream>
-
-using namespace std;
-
-int main(int argc, char* argv[])
-{
-  cout<<"Hello, World!"<<endl;
-}""")
-  f.close()
-  os.chdir("..")
-  f = open("Makefile", "w")
-  f.write("""default:
-	g++ -c src/main.cxx -o out/main.o
-	g++ out/main.o -o bin/main.out""")
-  f.close()
-  print "Project created!"
-  print "Building..."
-  os.system("make")
-  print "Succeeded!"
-  print "Running..."
-  os.system("./bin/main.out")
-  print "Done!"
+	if sys.argv[1] == "CPP":
+		makecpp(sys.argv[2])
+	else:
+		print usage
